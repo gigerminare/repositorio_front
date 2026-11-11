@@ -200,6 +200,58 @@ class SpecVerificationGateTests(unittest.TestCase):
             ],
         )
 
+    def test_invalid_json_report_is_blocked(self):
+        self.report_path.write_text('{"format_version":', encoding="utf-8")
+
+        errors, pass_count, fail_count = validate_report(
+            self.workspace, self.spec_relative, self.report_relative
+        )
+
+        self.assertTrue(any("relatório JSON inválido" in error for error in errors))
+        self.assertEqual((pass_count, fail_count), (0, 0))
+
+    def test_invalid_report_schema_is_blocked(self):
+        report = self.report()
+        del report["summary"]
+        self.write_report(report)
+
+        errors, _, _ = validate_report(
+            self.workspace, self.spec_relative, self.report_relative
+        )
+
+        self.assertTrue(any("campos padronizados" in error for error in errors))
+
+    def test_incomplete_criterion_list_is_blocked(self):
+        report = self.report()
+        report["criteria"] = report["criteria"][:1]
+        report["summary"] = {"pass": 1, "fail": 0}
+        self.write_report(report)
+
+        errors, _, _ = validate_report(
+            self.workspace, self.spec_relative, self.report_relative
+        )
+
+        self.assertTrue(any("critérios ausentes" in error for error in errors))
+
+    def test_pass_with_missing_file_evidence_is_blocked(self):
+        report = self.report(
+            first_evidence=[
+                {
+                    "kind": "file",
+                    "path": "repositorio_front/src/not-created.py",
+                    "lines": [1, 1],
+                    "observation": "O arquivo esperado não existe.",
+                }
+            ]
+        )
+        self.write_report(report)
+
+        errors, _, _ = validate_report(
+            self.workspace, self.spec_relative, self.report_relative
+        )
+
+        self.assertTrue(any("arquivo de evidência não existe" in error for error in errors))
+
     def test_gate_is_read_only(self):
         self.write_report(self.report())
         before = {

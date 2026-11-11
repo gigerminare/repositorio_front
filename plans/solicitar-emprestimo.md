@@ -114,8 +114,12 @@ existentes do NestJS e Prisma quando a implementação começar.
 
 ## Ordem de execução
 
-1. Verificar spec por subagente independente e gate; manter bloqueada se
-   não houver relatório aprovado.
+1. Verificar a spec e o baseline por subagente independente; arquivar o JSON
+   original e executar o gate. Antes da implementação, o gate confirma a
+   correspondência dos critérios, a estrutura e as evidências do relatório;
+   os FAILs do baseline são esperados porque a funcionalidade ainda não foi
+   implementada. O gate precisa retornar PASS após T-07 e a nova verificação
+   independente em T-08 para liberar a conclusão.
 2. Apresentar DDL planejado para trigger/funções/índices e obter aprovação
    separada, sem executar migration antes dela.
 3. Implementar migration local e testes de banco para o calendário

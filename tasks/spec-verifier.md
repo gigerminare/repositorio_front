@@ -1,5 +1,9 @@
 # Tasks: subagente verificador de specs
 
-- [x] T-01 | Implementar agente read-only e gate de relatório | `AGENTS.md`, `.github/agents/`, `tools/`, `docs/`, `README.md` | CA-07 a CA-11 | `python -m unittest discover -s repositorio_front/tests -v` e `git diff --check` | concluída
-- [x] T-02 | Testar bloqueios, evidências, erro plantado e independência | `tests/` | CA-08 a CA-12 | `python -m unittest discover -s repositorio_front/tests -v` | concluída
-- [x] T-03 | Validar gate sem relatório e revisar os dois worktrees | frontend e backend | CA-11 | gate deve bloquear; `git status --short` em ambos | concluída
+- [x] T-01 | Implementar agente read-only e gate de relatório | `AGENTS.md`, `.github/agents/`, `tools/`, `docs/`, `README.md` | CA-07 a CA-11 | testes unitários iniciais e `git diff --check` | concluída em rodada anterior
+- [x] T-04 | Registrar decisão sobre o tech lead e limitação de enforcement | spec específica da prática, instruções e documentação dos dois repositórios | CA-07, CA-10, CA-11 | revisão dos textos e referências | concluída; rules globais preservadas
+- [x] T-05 | Cobrir JSON, schema, conteúdo incompleto e FAIL nos dois gates | `tests/` dos dois repositórios | CA-08, CA-09, CA-11, CA-12 | unittest nos dois repositórios | 16 testes OK em cada repositório
+- [x] T-06 | Provar equivalência e testar invocações independentes | gates, agentes e verificações dos dois repositórios | CA-07 a CA-12 | `fc /b`, testes e rodadas reais com relatórios originais | gates, testes e agentes idênticos; rodada ampla retornou FAIL em critérios fora do escopo da Entrega 1
+- [x] T-07 | Executar ciclo real da divergência de TI-0006 | relatório da rodada FAIL, catálogo, relatório da nova rodada PASS | CA-01, CA-12 | gate FAIL antes e PASS após correção aprovada | relatórios e gates preservados; histórico de commits continua pendente de autorização humana
+- [x] T-08 | Registrar evidências honestas da prática nos dois ENTREGA.md | `ENTREGA.md` em ambos | CA-06 a CA-12 | revisão de referências, limitações e estados Git | concluída; cópias integradas nos dois repositórios
+- [ ] T-09 | Validar estado final sem criar commits/tags/push | ambos os repositórios | CA-07 a CA-12 | testes, `fc /b`, `git diff --check`, `git status --short` | checks Python e diffs passaram; Jest bloqueado por ausência de npm/Node.js; revisão final da spec ampla pendente

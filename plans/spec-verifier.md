@@ -15,22 +15,33 @@ que cada repositório possa verificar specs mesmo quando aberto sozinho.
 
 ## Abordagem
 
-1. Usar agente customizado do VS Code com contexto independente, ferramentas
-   limitadas a leitura e busca, sem execução ou delegação.
-2. Exigir relatório JSON com um item por critério, evidência localizável e
-   totais.
-3. Validar o relatório e bloquear a conclusão se estiver ausente, inválido,
-   sem evidência ou tiver qualquer FAIL.
-4. Corrigir a situação de TI-0010 na spec conforme a decisão explícita do
-   usuário, que resolve a contradição interna do HTML.
-5. Não implementar catálogo, imagens, conta, empréstimos ou operações remotas.
+1. Registrar na spec específica da prática a decisão de rejeitar a exceção
+   proposta pelo tech lead e manter o verificador read-only.
+2. Alinhar agente, instruções, documentação e testes nos dois repositórios.
+3. Ampliar testes negativos do gate e demonstrar equivalência byte a byte e
+   comportamental.
+4. Documentar que o gate CLI é obrigatório por processo, mas não impede
+   deterministicamente uma conclusão conversacional omitida.
+5. Executar rodadas reais e independentes do agente em ambos os repositórios,
+   preservar os JSONs retornados e executar os gates.
+6. Usar a divergência já observada de TI-0006 como condição de erro, obter
+   reprovação independente, corrigir pelo agente principal segundo a decisão
+   registrada na spec de dados iniciais e solicitar nova verificação
+   independente.
+7. Registrar resultados reais e limitações no `ENTREGA.md` de ambos; não
+   criar commits, tags, push ou deploy.
 
 ## Verificação
 
-- Testes unitários com `python -m unittest`.
-- `git diff --check` no frontend e backend.
-- Executar o gate sem relatório para confirmar bloqueio, sem tratar esse
-  bloqueio esperado como aprovação da spec.
+- Testes unitários com `python -m unittest` nos dois repositórios, incluindo
+  JSON inválido, schema inválido, relatório incompleto e erro plantado.
+- Comparar os gates com `fc /b` e executar os testes correspondentes em ambos.
+- Executar cada rodada independente do agente e seu gate com o JSON original.
+- Confirmar, por leitura do catálogo e nova verificação, a remoção da
+  divergência de TI-0006.
+- `git diff --check` e `git status --short` nos dois repositórios.
+- Não apresentar hashes de commits, tags ou evidências de histórico que não
+  existam.
 
 ## Rastreabilidade
 
@@ -38,3 +49,7 @@ que cada repositório possa verificar specs mesmo quando aberto sozinho.
   implementação.
 - CA-01 a CA-06: requisitos das demais entregas; permanecem fora do escopo de
   implementação desta task.
+- CA-07: documentar como limitação a ausência de bloqueio determinístico da
+  conclusão conversacional; o gate só garante resultado quando executado.
+- A decisão sobre o tech lead é específica desta prática e não altera as
+  rules globais.

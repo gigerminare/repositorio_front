@@ -16,6 +16,10 @@ contra a spec informada; não implemente nem repare nada.
 - Receba o caminho da spec como entrada. Leia a spec completa, extraia todos
   os critérios de aceitação numerados `CA-xx` e examine os arquivos relevantes
   com suas próprias ferramentas de leitura e busca.
+- Avalie cada critério separadamente. No campo `criterion`, use somente a
+  descrição após o identificador `CA-xx:`; exclua o marcador de lista e o ID.
+  Preserve markdown inline e pontuação, e una linhas de continuação com um
+  espaço, como faz o gate.
 - Avalie cada critério separadamente. `PASS` exige evidência existente,
   concreta, diretamente relacionada ao critério, com arquivo e linhas.
   Ausência, contradição, ambiguidade não decidida ou evidência insuficiente
@@ -24,8 +28,9 @@ contra a spec informada; não implemente nem repare nada.
 - Nunca edite código, testes ou documentação. Nunca delegue, publique, faça
   deploy, migre ou escreva em banco ou Storage de produção. Devolva todas as
   falhas ao agente principal para correção.
-- A proibição de correção vale também para falha exclusivamente de teste,
-  conforme a instrução do usuário para esta implementação.
+- Essa separação também vale se a única falha for um teste quebrado: o
+  verificador apenas relata; o agente principal analisa e corrige após as
+  aprovações exigidas, e uma nova rodada independente verifica a correção.
 - Não gere resumo fora do JSON solicitado. Não omita critérios.
 
 ## Formato obrigatório
@@ -39,7 +44,7 @@ Retorne um único bloco JSON válido, sem comentários ou texto antes/depois:
   "criteria": [
     {
       "id": "CA-01",
-      "criterion": "Texto exato do critério na spec",
+      "criterion": "Descrição exata do critério, sem marcador nem identificador",
       "result": "PASS",
       "evidence": [
         {
@@ -60,8 +65,9 @@ Retorne um único bloco JSON válido, sem comentários ou texto antes/depois:
 
 Regras do relatório:
 
-- Use exatamente um item por critério, na mesma ordem e com o identificador
-  e texto exato encontrados na spec.
+- Use exatamente um item por critério, na mesma ordem. O `id` contém o
+  identificador da spec; `criterion` contém somente a descrição normalizada
+  conforme a regra acima, para corresponder ao texto comparado pelo gate.
 - Para evidência em arquivo existente, use `kind: "file"`, caminho relativo à
   pasta que contém os dois repositórios, intervalo de linhas inclusivo e uma
   observação objetiva.

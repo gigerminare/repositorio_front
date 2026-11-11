@@ -28,6 +28,9 @@ campos e a mesma ordem dos critérios, permitindo comparação direta.
 ## Regra de decisão
 
 - Cada critério `CA-xx` deve ter exatamente um `PASS` ou `FAIL`.
+- No campo `criterion`, registre apenas a descrição depois de `CA-xx:`,
+  sem marcador ou ID. Preserve markdown inline e pontuação e una linhas de
+  continuação com um espaço, conforme a extração do gate.
 - Um PASS exige referência a arquivo existente, linhas e observação objetiva.
 - Ausência de artefato pode ser relatada como evidência `missing`, mas nunca
   aprova um critério.
@@ -38,6 +41,14 @@ campos e a mesma ordem dos critérios, permitindo comparação direta.
   passaram. Código `1` significa que existe FAIL. Código `2` significa
   relatório ausente ou inválido.
 - O gate é somente leitura; ele não corrige nem altera arquivos.
+
+## Limite de enforcement
+
+Os `AGENTS.md` tornam a chamada obrigatória como regra de processo, e o gate
+retorna bloqueio quando é executado sem relatório aprovado. Não há integração
+determinística deste gate com o encerramento da conversa; portanto, o harness
+não consegue impedir tecnicamente uma resposta de conclusão se a chamada for
+omitida. Não descreva a obrigação procedural como enforcement automático.
 
 O agente só dispõe de ferramentas de leitura e busca, sem edição, terminal,
 subagentes, navegador ou ferramentas externas. A proibição também cobre
@@ -52,7 +63,9 @@ Execute os testes do gate com a biblioteca padrão do Python:
 python -m unittest discover -s repositorio_front/tests -v
 ```
 
-Os testes cobrem relatório aprovado, falhas e evidências inválidas, bloqueio
-sem verificação, erro plantado e a configuração read-only do agente. Eles
-validam o harness e o contrato do relatório; não substituem uma rodada real do
-subagente sobre a spec que será concluída.
+Os testes cobrem relatório aprovado, JSON e schema inválidos, critérios
+ausentes, evidência de arquivo inexistente, evidências inválidas, bloqueio sem
+verificação, erro plantado, critérios com linhas de continuação e a
+configuração read-only do agente. Eles validam o harness e o contrato do
+relatório; não substituem uma rodada real do subagente sobre a spec que será
+concluída.

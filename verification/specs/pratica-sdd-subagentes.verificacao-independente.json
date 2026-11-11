@@ -1,0 +1,798 @@
+{
+  "format_version": 1,
+  "spec_path": "repositorio_front/docs/specs/pratica-sdd-subagentes.md",
+  "criteria": [
+    {
+      "id": "CA-01",
+      "criterion": "A lista de equipamentos e os termos de busca correspondem aos 12 registros da atividade; TI-0004 e TI-0007 ficam em manutenção e os outros dez, inclusive TI-0010, disponíveis.",
+      "result": "FAIL",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "repositorio-back/src/modules/initial-data/catalog.ts",
+          "lines": [58, 68],
+          "observation": "TI-0006 e TI-0007 estão ambos marcados como manutenção, embora a especificação indique que somente TI-0004 e TI-0007 ficam nessa situação."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio-back/src/modules/initial-data/initial-data.spec.ts",
+          "lines": [43, 50],
+          "observation": "O teste espera TI-0004 e TI-0007 como os únicos itens em manutenção, contradizendo o catálogo, que também marca TI-0006."
+        }
+      ]
+    },
+    {
+      "id": "CA-02",
+      "criterion": "A regra de empréstimo usa limite 5, bloqueio por atraso, criação imediata, data prevista de 14 dias úteis e proteção contra concorrência.",
+      "result": "FAIL",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "repositorio-back/src/app.module.ts",
+          "lines": [5, 7],
+          "observation": "O módulo de aplicação registra somente AppController e AppService; não há módulo de empréstimos integrado."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio_front/index.html",
+          "lines": [32, 36],
+          "observation": "A interface anuncia 03 itens por pessoa, e não o limite específico de cinco."
+        }
+      ]
+    },
+    {
+      "id": "CA-03",
+      "criterion": "Cada imagem processada tem 800×600, crédito Pexels com link, metadados de fotógrafo/licença e foto única por equipamento.",
+      "result": "PASS",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "repositorio_front/.github/skills/imagens-equipamentos/scripts/prepare-images.mjs",
+          "lines": [138, 177],
+          "observation": "A preparação gera metadados de fotógrafo, URLs, licença e crédito Fotos: Pexels vinculado à página da foto."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio_front/.github/skills/imagens-equipamentos/scripts/prepare-images.mjs",
+          "lines": [76, 98],
+          "observation": "O processo rejeita patrimônio repetido e identificador de foto reutilizado."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio_front/.github/skills/imagens-equipamentos/tests/prepare-images.test.mjs",
+          "lines": [96, 120],
+          "observation": "O teste confere a saída JPEG de 800×600 e as chamadas somente aos endpoints Pexels."
+        }
+      ]
+    },
+    {
+      "id": "CA-04",
+      "criterion": "O processo de preparação não possui acesso que permita escrever no banco ou Storage de produção.",
+      "result": "PASS",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "repositorio_front/.github/skills/imagens-equipamentos/scripts/prepare-images.mjs",
+          "lines": [252, 268],
+          "observation": "O script grava imagens e manifesto em caminhos locais e declara que o upload ao bucket não é realizado."
+        }
+      ]
+    },
+    {
+      "id": "CA-05",
+      "criterion": "A conta do professor começa com zero empréstimos e sua senha não consta em arquivos versionados.",
+      "result": "PASS",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "repositorio-back/src/modules/initial-data/seed-initial-data.ts",
+          "lines": [121, 124],
+          "observation": "O seed interrompe a carga se encontrar empréstimos associados à conta do professor."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio-back/src/modules/initial-data/seed.integration.spec.ts",
+          "lines": [216, 248],
+          "observation": "O teste verifica conta/membership, zero empréstimos e que a segunda execução não cria novamente o usuário."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio-back/src/modules/initial-data/initial-data.spec.ts",
+          "lines": [249, 270],
+          "observation": "O teste procura senha hardcoded nos arquivos enumerados e exige valor vazio no exemplo de ambiente."
+        }
+      ]
+    },
+    {
+      "id": "CA-06",
+      "criterion": "O relatório de entrega existe na raiz de ambos os repositórios e contém evidências verificáveis de cada decisão e rodada do verificador.",
+      "result": "FAIL",
+      "evidence": [
+        {
+          "kind": "missing",
+          "path": "repositorio_front/ENTREGA.md",
+          "lines": null,
+          "observation": "A raiz de repositorio_front foi verificada; ENTREGA.md não existe."
+        },
+        {
+          "kind": "missing",
+          "path": "repositorio-back/ENTREGA.md",
+          "lines": null,
+          "observation": "A raiz de repositorio-back foi verificada; ENTREGA.md não existe."
+        }
+      ]
+    },
+    {
+      "id": "CA-07",
+      "criterion": "Há um agente verificador disponível em cada repositório, que recebe o caminho da spec e lê por conta própria a spec e seus critérios em contexto independente.",
+      "result": "PASS",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "repositorio_front/.github/agents/spec-verifier.agent.md",
+          "lines": [1, 16],
+          "observation": "O agente está definido no frontend e suas instruções exigem receber o caminho, ler a spec e trabalhar em contexto limpo."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio-back/.github/agents/spec-verifier.agent.md",
+          "lines": [1, 16],
+          "observation": "O agente está definido no backend com as mesmas instruções de leitura independente da spec."
+        }
+      ]
+    },
+    {
+      "id": "CA-08",
+      "criterion": "O agente retorna exatamente um resultado PASS ou FAIL por critério, com evidência concreta e localizável; critério sem evidência não pode passar.",
+      "result": "PASS",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "repositorio_front/.github/agents/spec-verifier.agent.md",
+          "lines": [17, 30],
+          "observation": "As instruções exigem avaliação individual, evidência concreta e FAIL quando faltar evidência."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio_front/.github/agents/spec-verifier.agent.md",
+          "lines": [37, 50],
+          "observation": "O contrato do relatório enumera resultados por critério e inclui evidências."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio_front/tools/spec_verification_gate.py",
+          "lines": [129, 130],
+          "observation": "O gate rejeita PASS sem evidência de arquivo existente."
+        }
+      ]
+    },
+    {
+      "id": "CA-09",
+      "criterion": "O relatório segue um formato JSON estável, inclui os critérios na ordem da spec e totais PASS/FAIL que permitem comparar rodadas.",
+      "result": "PASS",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "repositorio_front/tools/spec_verification_gate.py",
+          "lines": [14, 15],
+          "observation": "O gate fixa os campos JSON esperados para o relatório e para cada critério."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio_front/tools/spec_verification_gate.py",
+          "lines": [170, 212],
+          "observation": "O gate compara identificadores e ordem com a spec e valida que os totais correspondam aos resultados."
+        }
+      ]
+    },
+    {
+      "id": "CA-10",
+      "criterion": "O verificador não dispõe de ferramentas para editar arquivos, executar comandos, fazer deploy ou acessar escrita em produção e devolve falhas sem corrigi-las.",
+      "result": "PASS",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "repositorio_front/.github/agents/spec-verifier.agent.md",
+          "lines": [1, 5],
+          "observation": "A configuração limita ferramentas a read e search e não permite outros agentes."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio_front/.github/agents/spec-verifier.agent.md",
+          "lines": [25, 28],
+          "observation": "As instruções proíbem execução, edição, delegação e escrita de produção, e determinam devolver falhas."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio-back/.github/agents/spec-verifier.agent.md",
+          "lines": [1, 5],
+          "observation": "A configuração do agente no backend também limita ferramentas a read e search."
+        }
+      ]
+    },
+    {
+      "id": "CA-11",
+      "criterion": "O gate bloqueia a conclusão quando o relatório está ausente, inválido, incompleto, sem evidência ou contém qualquer FAIL.",
+      "result": "PASS",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "repositorio_front/tools/spec_verification_gate.py",
+          "lines": [134, 180],
+          "observation": "O gate rejeita relatório ausente/inválido e compara a lista de critérios com a lista esperada."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio_front/tools/spec_verification_gate.py",
+          "lines": [195, 212],
+          "observation": "O gate contabiliza PASS/FAIL e valida totais; o caminho CLI retorna bloqueio quando há FAIL."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio_front/tests/test_spec_verification_gate.py",
+          "lines": [108, 157],
+          "observation": "Há testes para relatório ausente, erro plantado, critério sem evidência e uso indevido de evidência missing."
+        }
+      ]
+    },
+    {
+      "id": "CA-12",
+      "criterion": "Testes demonstram a independência read-only, a reprovação de um erro plantado e a ausência de alterações pelo verificador.",
+      "result": "PASS",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "repositorio_front/tests/test_spec_verifier_config.py",
+          "lines": [11, 36],
+          "observation": "Os testes conferem ferramentas read/search, ausência de delegação e instruções de independência e não reparo."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio_front/tests/test_spec_verification_gate.py",
+          "lines": [116, 134],
+          "observation": "O teste planta LIMIT = 3 e verifica que o gate retorna FAIL."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio_front/tests/test_spec_verification_gate.py",
+          "lines": [255, 268],
+          "observation": "O teste compara os arquivos antes e depois da validação e exige que permaneçam iguais."
+        }
+      ]
+    },
+    {
+      "id": "CA-13",
+      "criterion": "A skill obtém imagens somente a partir da API Pexels; credenciais são lidas de ambiente local e não aparecem em arquivos ou logs.",
+      "result": "PASS",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "repositorio_front/.github/skills/imagens-equipamentos/scripts/prepare-images.mjs",
+          "lines": [6, 18],
+          "observation": "A URL da busca é a API Pexels e a chave ausente é solicitada por PEXELS_API_KEY do ambiente."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio_front/.github/skills/imagens-equipamentos/scripts/prepare-images.mjs",
+          "lines": [114, 133],
+          "observation": "A busca usa a API Pexels; o download validado usa URL de imagem Pexels devolvida pela busca."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio_front/.github/skills/imagens-equipamentos/tests/prepare-images.test.mjs",
+          "lines": [262, 276],
+          "observation": "O teste verifica a leitura por ambiente, ausência de chave embutida no script e bloqueio sem chave."
+        }
+      ]
+    },
+    {
+      "id": "CA-14",
+      "criterion": "Cada imagem exige revisão humana completa e aprovação explícita; pessoas, marcas/logos legíveis, texto legível ou telas com conteúdo, bem como revisão incompleta/reprovada, bloqueiam a preparação.",
+      "result": "PASS",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "repositorio_front/.github/skills/imagens-equipamentos/scripts/prepare-images.mjs",
+          "lines": [56, 71],
+          "observation": "A validação exige aprovação, revisor, data e todos os campos visuais marcados como ausentes."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio_front/.github/skills/imagens-equipamentos/tests/prepare-images.test.mjs",
+          "lines": [122, 170],
+          "observation": "Os testes cobrem cada condição visual proibida, revisão incompleta e aprovação falsa."
+        }
+      ]
+    },
+    {
+      "id": "CA-15",
+      "criterion": "O script usa `sharp` para produzir JPEG exatamente 800×600 e rejeita entradas ou saídas que não atendam a essa dimensão.",
+      "result": "FAIL",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "repositorio_front/.github/skills/imagens-equipamentos/scripts/prepare-images.mjs",
+          "lines": [226, 242],
+          "observation": "O script redimensiona a entrada com sharp e valida a dimensão da saída, mas não confere as dimensões da entrada antes do resize."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio_front/.github/skills/imagens-equipamentos/tests/prepare-images.test.mjs",
+          "lines": [96, 120],
+          "observation": "O teste verifica a dimensão JPEG de saída; não testa rejeição de entrada por dimensões diferentes."
+        }
+      ]
+    },
+    {
+      "id": "CA-16",
+      "criterion": "Cada imagem aprovada possui metadados de origem Pexels, fotógrafo, URLs de foto/perfil e licença, e o crédito visual `Fotos: Pexels` vinculado à foto, sem rodapé.",
+      "result": "FAIL",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "repositorio_front/.github/skills/imagens-equipamentos/scripts/prepare-images.mjs",
+          "lines": [138, 177],
+          "observation": "A preparação registra origem, fotógrafo, URLs, licença e crédito vinculado no manifesto, mas isso não implementa apresentação visual na interface."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio_front/index.html",
+          "lines": [17, 55],
+          "observation": "A página contém a tela de login e não apresenta imagens de equipamento nem o crédito junto a elas."
+        }
+      ]
+    },
+    {
+      "id": "CA-17",
+      "criterion": "O processo permite uma foto por equipamento, não reutiliza o mesmo identificador de foto em equipamentos distintos e repetições da mesma entrada produzem o mesmo caminho/manifesto sem duplicar resultados.",
+      "result": "PASS",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "repositorio_front/.github/skills/imagens-equipamentos/scripts/prepare-images.mjs",
+          "lines": [76, 98],
+          "observation": "O processo rejeita patrimônio duplicado e identificador Pexels repetido."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio_front/.github/skills/imagens-equipamentos/scripts/prepare-images.mjs",
+          "lines": [138, 177],
+          "observation": "O caminho do arquivo e do objeto de Storage é determinístico a partir do patrimônio."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio_front/.github/skills/imagens-equipamentos/tests/prepare-images.test.mjs",
+          "lines": [235, 260],
+          "observation": "O teste compara imagem e manifesto de duas execuções e verifica que só existe um arquivo para o equipamento."
+        }
+      ]
+    },
+    {
+      "id": "CA-18",
+      "criterion": "O processo prepara os arquivos localmente para o bucket público, sem implementar ou invocar escrita, upload, deploy ou publicação no Supabase.",
+      "result": "PASS",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "repositorio_front/.github/skills/imagens-equipamentos/scripts/prepare-images.mjs",
+          "lines": [252, 268],
+          "observation": "O script escreve apenas localmente e registra explicitamente que o upload ao bucket público não é realizado."
+        }
+      ]
+    },
+    {
+      "id": "CA-19",
+      "criterion": "Testes locais cobrem dimensão 800×600, unicidade, idempotência e bloqueio das condições visuais proibidas ou sem aprovação.",
+      "result": "PASS",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "repositorio_front/.github/skills/imagens-equipamentos/tests/prepare-images.test.mjs",
+          "lines": [96, 120],
+          "observation": "Teste verifica a saída 800×600."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio_front/.github/skills/imagens-equipamentos/tests/prepare-images.test.mjs",
+          "lines": [122, 205],
+          "observation": "Testes cobrem bloqueio de revisão e condições proibidas, patrimônio duplicado e reutilização da foto."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio_front/.github/skills/imagens-equipamentos/tests/prepare-images.test.mjs",
+          "lines": [235, 260],
+          "observation": "Teste cobre repetição da entrada sem duplicar arquivo e mantendo o manifesto."
+        }
+      ]
+    },
+    {
+      "id": "CA-20",
+      "criterion": "O seed contém exatamente os 12 equipamentos e termos de busca da atividade, com TI-0004 e TI-0007 em manutenção e os outros dez, inclusive TI-0010, disponíveis.",
+      "result": "FAIL",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "repositorio-back/src/modules/initial-data/catalog.ts",
+          "lines": [21, 104],
+          "observation": "O catálogo contém 12 registros e os termos, mas marca TI-0006 e TI-0007 como manutenção, contrariando a situação exigida."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio-back/src/modules/initial-data/initial-data.spec.ts",
+          "lines": [43, 50],
+          "observation": "O teste espera apenas TI-0004 e TI-0007 em manutenção e TI-0010 disponível, mas o catálogo também marca TI-0006 em manutenção."
+        }
+      ]
+    },
+    {
+      "id": "CA-21",
+      "criterion": "Os 12 patrimônios são únicos e cada equipamento se associa a exatamente uma imagem preparada pela skill, com arquivo JPEG 800×600 e metadados Pexels completos.",
+      "result": "PASS",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "repositorio-back/src/modules/initial-data/prepared-images.ts",
+          "lines": [87, 115],
+          "observation": "O carregador exige o arquivo local JPEG com dimensão exata 800×600."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio-back/src/modules/initial-data/prepared-images.ts",
+          "lines": [123, 192],
+          "observation": "O carregador valida origem, fotógrafo, URLs, licença, crédito e caminhos da imagem."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio-back/src/modules/initial-data/prepared-images.ts",
+          "lines": [207, 253],
+          "observation": "O manifesto deve conter 12 imagens, com patrimônio esperado e identificadores de foto únicos."
+        }
+      ]
+    },
+    {
+      "id": "CA-22",
+      "criterion": "A carga inicial não cria empréstimos; a conta de teste existe no Auth local, tem membership `colaborador` no tenant inicial e não possui empréstimos.",
+      "result": "PASS",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "repositorio-back/src/modules/initial-data/seed-initial-data.ts",
+          "lines": [148, 225],
+          "observation": "O seed localiza ou cria a conta, cria membership no tenant e interrompe se a conta possuir empréstimos."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio-back/src/modules/initial-data/seed.integration.spec.ts",
+          "lines": [216, 248],
+          "observation": "O teste verifica conta, membership colaborador, zero empréstimos e idempotência da conta."
+        }
+      ]
+    },
+    {
+      "id": "CA-23",
+      "criterion": "A senha do professor só é lida de configuração segura local, sem valor em código, fixture, seed, documentação ou saída; reexecução não redefine a senha existente.",
+      "result": "PASS",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "repositorio-back/src/modules/initial-data/local-environment.ts",
+          "lines": [106, 115],
+          "observation": "A senha é obtida de INITIAL_PROFESSOR_PASSWORD do ambiente, sem valor padrão embutido."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio-back/src/modules/initial-data/seed-initial-data.ts",
+          "lines": [150, 167],
+          "observation": "A senha só é passada à criação quando a conta ainda não existe; conta existente não é redefinida."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio-back/src/modules/initial-data/initial-data.spec.ts",
+          "lines": [249, 270],
+          "observation": "O teste procura senha hardcoded nos arquivos selecionados e exige variável vazia em .env.example."
+        }
+      ]
+    },
+    {
+      "id": "CA-24",
+      "criterion": "O seed é idempotente para tenant, equipamentos, imagens, metadados e usuário; não cria duplicatas e não apaga registros para forçar a quantidade esperada.",
+      "result": "PASS",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "repositorio-back/src/modules/initial-data/seed-initial-data.ts",
+          "lines": [177, 225],
+          "observation": "O seed usa upsert sem atualização destrutiva e valida estado existente, colisões de foto e quantidade."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio-back/src/modules/initial-data/seed.integration.spec.ts",
+          "lines": [198, 248],
+          "observation": "O teste executa o seed duas vezes e verifica que permanece com 12 equipamentos, sem empréstimos ou criação duplicada do usuário."
+        }
+      ]
+    },
+    {
+      "id": "CA-25",
+      "criterion": "O seed só permite escrita quando tanto banco quanto Supabase Auth apontam para hosts loopback; qualquer destino remoto ou configuração ambígua é rejeitada antes de escrever.",
+      "result": "PASS",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "repositorio-back/src/modules/initial-data/local-environment.ts",
+          "lines": [20, 105],
+          "observation": "DATABASE_URL e SUPABASE_URL são validadas como loopback; hosts alternativos, destinos remotos e configuração ambígua são rejeitados."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio-back/prisma/seed.ts",
+          "lines": [8, 17],
+          "observation": "A validação do ambiente ocorre antes de construir o cliente Prisma e antes de conectar."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio-back/src/modules/initial-data/initial-data.spec.ts",
+          "lines": [131, 156],
+          "observation": "Teste verifica rejeição de hosts remotos e de parâmetro de host conflitante."
+        }
+      ]
+    },
+    {
+      "id": "CA-26",
+      "criterion": "Testes locais verificam quantidade, situação, patrimônio, associação/dimensão das imagens, ausência de empréstimos, usuário sem empréstimos, idempotência e ausência de senha hardcoded, sem depender de serviços Pexels/Supabase reais.",
+      "result": "FAIL",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "repositorio-back/src/modules/initial-data/initial-data.spec.ts",
+          "lines": [43, 50],
+          "observation": "O teste verifica as situações esperadas, mas a expectativa de apenas TI-0004 e TI-0007 em manutenção contradiz o catálogo, que também marca TI-0006."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio-back/src/modules/initial-data/catalog.ts",
+          "lines": [58, 68],
+          "observation": "O catálogo contradiz a situação que o teste exige, de modo que a verificação de situação não pode ser considerada satisfeita."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio-back/src/modules/initial-data/seed.integration.spec.ts",
+          "lines": [198, 248],
+          "observation": "Há cobertura de integração local para quantidade, imagens, empréstimos e idempotência; a contradição de situação permanece."
+        }
+      ]
+    },
+    {
+      "id": "CA-27",
+      "criterion": "A pessoa precisa estar autenticada como colaboradora no tenant ativo para acessar catálogo, solicitar empréstimo e consultar seus empréstimos; identidade e tenant vêm do contexto validado no backend, nunca de valores enviados pelo cliente.",
+      "result": "FAIL",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "repositorio-back/src/app.module.ts",
+          "lines": [5, 7],
+          "observation": "O backend registra apenas o controlador e serviço padrão, sem módulo de autenticação ou contexto de tenant."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio_front/script.js",
+          "lines": [33, 52],
+          "observation": "O envio do login apenas valida campos e informa que a autenticação será conectada ao backend."
+        }
+      ]
+    },
+    {
+      "id": "CA-28",
+      "criterion": "O catálogo retorna os 12 equipamentos com imagem, nome, categoria e situação efetiva; equipamento em manutenção é indicado como tal, empréstimo aberto aparece como emprestado e somente item disponível habilita solicitação.",
+      "result": "FAIL",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "repositorio-back/src/app.controller.ts",
+          "lines": [4, 10],
+          "observation": "O controlador expõe somente o endpoint raiz de saudação, não um catálogo de equipamentos."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio_front/index.html",
+          "lines": [17, 64],
+          "observation": "A interface contém a tela de login e não apresenta catálogo ou ações de solicitação."
+        }
+      ]
+    },
+    {
+      "id": "CA-29",
+      "criterion": "O crédito de cada imagem é apresentado como link `Fotos: Pexels` junto à imagem, sem rodapé global, conforme a decisão explícita anterior do usuário para compatibilizar as Entregas 2 e 4.",
+      "result": "FAIL",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "repositorio_front/index.html",
+          "lines": [17, 55],
+          "observation": "A página apresenta login sem imagens de catálogo, portanto não implementa crédito visual junto à imagem."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio_front/.github/skills/imagens-equipamentos/scripts/prepare-images.mjs",
+          "lines": [163, 168],
+          "observation": "O manifesto registra o link de crédito, mas não há apresentação desse link em uma interface de catálogo."
+        }
+      ]
+    },
+    {
+      "id": "CA-30",
+      "criterion": "Solicitar um item disponível cria o empréstimo imediatamente, sem aprovação ou fila; manutenção ou empréstimo aberto impedem a criação.",
+      "result": "FAIL",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "repositorio-back/src/app.module.ts",
+          "lines": [5, 7],
+          "observation": "O backend não registra módulo ou serviço de solicitação de empréstimo."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio-back/src/app.controller.ts",
+          "lines": [4, 10],
+          "observation": "O único endpoint observado é a saudação no caminho raiz."
+        }
+      ]
+    },
+    {
+      "id": "CA-31",
+      "criterion": "O vencimento é calculado para 14 dias úteis após a solicitação, começando no próximo dia útil e excluindo somente feriados nacionais oficiais brasileiros. O calendário local é determinístico e versionado por ano, registra autoridade, identificação/URL oficial federal, datas de publicação/verificação, versão e SHA-256 das datas, exclui pontos facultativos e feriados estaduais/municipais, não consulta serviços externos em runtime e falha explicitamente se faltar o conjunto do ano. PostgreSQL é o relógio canônico; após locks, o comando de criação captura um único instante com snapshot novo. `due_at` é o limite exclusivo às 00h do dia seguinte à data civil de vencimento em `America/Sao_Paulo`.",
+      "result": "FAIL",
+      "evidence": [
+        {
+          "kind": "missing",
+          "path": "repositorio-back/src/modules/loans/loan-calendar.ts",
+          "lines": null,
+          "observation": "O escopo de src/modules foi inspecionado; contém initial-data, mas não há módulo de empréstimos ou calendário versionado."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio-back/prisma/schema.prisma",
+          "lines": [64, 72],
+          "observation": "O modelo Loan declara campos de timestamps, mas não define calendário, política de vencimento ou captura canônica do relógio."
+        }
+      ]
+    },
+    {
+      "id": "CA-32",
+      "criterion": "O quinto empréstimo aberto é permitido e um sexto é recusado; empréstimos abertos são os que têm `returned_at IS NULL`. Com quatro empréstimos abertos não atrasados e dois equipamentos diferentes disponíveis, dois pedidos simultâneos do mesmo colaborador resultam exatamente em uma criação e uma recusa, após serialização por usuário no PostgreSQL.",
+      "result": "FAIL",
+      "evidence": [
+        {
+          "kind": "missing",
+          "path": "repositorio-back/src/modules/loans",
+          "lines": null,
+          "observation": "O escopo de src/modules contém apenas initial-data; não há serviço de empréstimos nem serialização por usuário."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio-back/prisma/schema.prisma",
+          "lines": [64, 72],
+          "observation": "O modelo contém campos de empréstimo, mas não implementa limite ou concorrência por colaborador."
+        }
+      ]
+    },
+    {
+      "id": "CA-33",
+      "criterion": "A existência de qualquer empréstimo aberto atrasado bloqueia nova solicitação. O empréstimo permanece no prazo durante todo o dia de vencimento e fica atrasado precisamente quando `reference_instant >= due_at`, às 00h do dia seguinte em `America/Sao_Paulo`.",
+      "result": "FAIL",
+      "evidence": [
+        {
+          "kind": "missing",
+          "path": "repositorio-back/src/modules/loans",
+          "lines": null,
+          "observation": "O escopo de src/modules não contém implementação de regra de atraso ou serviço de empréstimos."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio-back/prisma/schema.prisma",
+          "lines": [64, 72],
+          "observation": "O modelo não contém a regra de cálculo de atraso ou o limite temporal indicado."
+        }
+      ]
+    },
+    {
+      "id": "CA-34",
+      "criterion": "Serviço e PostgreSQL impedem empréstimo de equipamento em manutenção/emprestado, pedido acima do limite e solicitação por pessoa com atraso. Locks em ordem fixa são obtidos antes do comando separado de criação sob `READ COMMITTED`; esse comando começa com snapshot novo, captura uma única referência para regra, cálculo e gravação, e a trigger valida a integridade. O índice único parcial protege contra duplicidade por equipamento; o backend consome timestamps retornados pelo banco.",
+      "result": "FAIL",
+      "evidence": [
+        {
+          "kind": "missing",
+          "path": "repositorio-back/src/modules/loans",
+          "lines": null,
+          "observation": "O escopo de src/modules não contém serviço de empréstimos ou lógica de locks, criação e consumo de timestamps."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio-back/prisma/migrations/20261111043720_initial_data/migration.sql",
+          "lines": [115, 124],
+          "observation": "A migration inicial contém políticas de leitura, mas não contém trigger para validação das regras de empréstimo."
+        }
+      ]
+    },
+    {
+      "id": "CA-35",
+      "criterion": "Pedidos simultâneos para o mesmo equipamento produzem no máximo um empréstimo aberto e a outra solicitação recebe uma recusa explícita, sem erro interno ou sucesso falso.",
+      "result": "FAIL",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "repositorio-back/prisma/migrations/20261111043720_initial_data/migration.sql",
+          "lines": [89, 92],
+          "observation": "Há índice único parcial para empréstimos abertos por equipamento, mas não há serviço ou resposta de recusa explícita para a corrida."
+        },
+        {
+          "kind": "missing",
+          "path": "repositorio-back/src/modules/loans",
+          "lines": null,
+          "observation": "O escopo de src/modules não contém implementação de endpoint ou serviço de empréstimos."
+        }
+      ]
+    },
+    {
+      "id": "CA-36",
+      "criterion": "“Meus empréstimos” apresenta somente os empréstimos abertos do colaborador autenticado, com equipamento e data prevista de devolução; dados de outros usuários ou tenants não são retornados.",
+      "result": "FAIL",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "repositorio-back/src/app.controller.ts",
+          "lines": [4, 10],
+          "observation": "O backend expõe somente a rota raiz e não oferece consulta de empréstimos."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio_front/index.html",
+          "lines": [17, 55],
+          "observation": "A interface contém a tela de login, sem tela de consulta de empréstimos."
+        }
+      ]
+    },
+    {
+      "id": "CA-37",
+      "criterion": "Quando a solicitação é recusada por atraso, limite, manutenção ou empréstimo existente, a interface informa o motivo ao colaborador; o frontend não é a única camada que aplica as regras.",
+      "result": "FAIL",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "repositorio_front/script.js",
+          "lines": [33, 52],
+          "observation": "O script só trata campos vazios e exibe mensagem genérica sobre autenticação; não implementa mensagens de recusa de empréstimo."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio-back/src/app.controller.ts",
+          "lines": [4, 10],
+          "observation": "O backend não apresenta endpoint de solicitação ou validação de regras de empréstimo."
+        }
+      ]
+    },
+    {
+      "id": "CA-38",
+      "criterion": "Testes unitários verificam regras e calendário; testes com PostgreSQL verificam triggers, constraints, isolamento e duas corridas distintas (limite por usuário e mesmo equipamento); testes HTTP verificam autenticação/tenant e respostas; testes de frontend verificam migração visual delimitada, catálogo, bloqueios, motivo e “Meus empréstimos”.",
+      "result": "FAIL",
+      "evidence": [
+        {
+          "kind": "missing",
+          "path": "repositorio-back/src/modules/loans",
+          "lines": null,
+          "observation": "O escopo de src/modules e os testes do backend contêm inicialização de dados, mas não testes de empréstimos, calendário ou corridas."
+        },
+        {
+          "kind": "missing",
+          "path": "repositorio_front/tests/catalog",
+          "lines": null,
+          "observation": "O diretório de testes do frontend contém testes do gate e da configuração do verificador, sem testes de catálogo, bloqueios ou Meus empréstimos."
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "pass": 19,
+    "fail": 19
+  }
+}

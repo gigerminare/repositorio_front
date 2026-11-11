@@ -185,15 +185,15 @@ no PostgreSQL.
 Os IDs são compartilhados com a spec da prática para manter a
 rastreabilidade:
 
-- **CA-27:** Acesso ao catálogo, solicitação e “Meus empréstimos” exige
+- CA-27: Acesso ao catálogo, solicitação e “Meus empréstimos” exige
   autenticação de colaborador no tenant ativo; user/tenant vêm do contexto
   validado no backend.
-- **CA-28:** O catálogo lista os 12 equipamentos com imagem, nome, categoria
+- CA-28: O catálogo lista os 12 equipamentos com imagem, nome, categoria
   e situação efetiva; apenas disponíveis podem ser solicitados.
-- **CA-29:** Cada imagem tem link `Fotos: Pexels` associado, sem rodapé.
-- **CA-30:** Solicitar equipamento disponível cria empréstimo imediatamente;
+- CA-29: Cada imagem tem link `Fotos: Pexels` associado, sem rodapé.
+- CA-30: Solicitar equipamento disponível cria empréstimo imediatamente;
   item em manutenção ou com empréstimo aberto é recusado.
-- **CA-31:** O vencimento segue 14 dias úteis, contando do próximo dia útil,
+- CA-31: O vencimento segue 14 dias úteis, contando do próximo dia útil,
   excluindo somente feriados nacionais oficiais brasileiros, por calendário
   local determinístico versionado anualmente com autoridade, identificação
   e URL oficial da fonte, datas de publicação/verificação, versão e SHA-256
@@ -202,17 +202,17 @@ rastreabilidade:
   versionado falha explicitamente. O limite exclusivo `due_at` é 00h do dia
   seguinte ao vencimento em `America/Sao_Paulo`; o empréstimo passa a
   atrasado quando `reference_instant >= due_at`.
-- **CA-32:** O quinto empréstimo aberto é permitido e o sexto é recusado.
+- CA-32: O quinto empréstimo aberto é permitido e o sexto é recusado.
   Com quatro empréstimos abertos não atrasados e dois equipamentos
   disponíveis diferentes, duas solicitações simultâneas do mesmo
   colaborador resultam exatamente em uma criação e uma recusa; a decisão é
   serializada no PostgreSQL e reavaliada após a espera pelo lock do
   colaborador.
-- **CA-33:** Qualquer empréstimo aberto atrasado bloqueia novo pedido. O
+- CA-33: Qualquer empréstimo aberto atrasado bloqueia novo pedido. O
   empréstimo permanece no prazo durante todo o dia da data prevista e passa
   a atrasado precisamente às 00h do dia seguinte em `America/Sao_Paulo`,
   conforme comparação `reference_instant >= due_at`.
-- **CA-34:** Serviço e PostgreSQL impedem equipamento em
+- CA-34: Serviço e PostgreSQL impedem equipamento em
   manutenção/emprestado, pedido acima do limite e solicitação por pessoa com
   atraso. Locks de tenant/colaborador e equipamento são adquiridos em ordem
   fixa antes do comando separado de criação. Sob `READ COMMITTED`, a função
@@ -221,15 +221,15 @@ rastreabilidade:
   valida a integridade e o índice parcial protege a unicidade por
   equipamento. O backend consome os timestamps retornados sem criar outro
   instante.
-- **CA-35:** Dois pedidos simultâneos para o mesmo equipamento produzem no
+- CA-35: Dois pedidos simultâneos para o mesmo equipamento produzem no
   máximo um empréstimo aberto, inclusive quando são feitos por
   colaboradores diferentes; o perdedor recebe recusa de negócio. Este teste
   é independente do cenário de concorrência por limite do CA-32.
-- **CA-36:** “Meus empréstimos” mostra somente os empréstimos abertos do
+- CA-36: “Meus empréstimos” mostra somente os empréstimos abertos do
   usuário autenticado, com equipamento e data de devolução.
-- **CA-37:** Recusas por atraso, limite, manutenção ou empréstimo existente
+- CA-37: Recusas por atraso, limite, manutenção ou empréstimo existente
   comunicam o motivo ao usuário, e a regra não depende do frontend.
-- **CA-38:** Testes cobrem calendário/vencimento, regras de domínio,
+- CA-38: Testes cobrem calendário/vencimento, regras de domínio,
   persistência/trigger, isolamento por tenant, concorrência, contrato HTTP e
   comportamento do frontend usando dados locais. O frontend adota React/Vite
   conforme ADR-001, preservando a identidade visual e os estilos existentes

@@ -50,9 +50,21 @@ remotas de carga, publicação ou deploy.
   for um teste quebrado. Devolve todas as falhas ao agente principal; esta
   instrução mais estrita prevalece sobre a exceção do pedido do tech lead no
   HTML para esta implementação.
-- A verificação é obrigatória antes de declarar uma spec pronta e não pode
-  depender de um pedido manual: as instruções do projeto exigem a chamada e
-  um gate bloqueia a conclusão sem um relatório válido e aprovado.
+- Decisão explícita sobre o pedido do tech lead: para esta implementação,
+  mantém-se o verificador estritamente read-only. Ele apenas analisa, produz
+  evidências e retorna PASS/FAIL. O agente principal analisa e corrige as
+  falhas, respeitando a aprovação exigida pelas rules; uma nova rodada
+  independente confirma a correção. A exceção proposta pelo tech lead não
+  foi adotada porque conflita com a independência do verificador e com a
+  regra de testes que exige parar e aguardar aprovação antes de corrigir uma
+  falha.
+- A verificação é uma etapa obrigatória do processo antes de declarar uma
+  spec pronta. Os `AGENTS.md` instruem o agente principal a executar a rodada
+  e o gate CLI bloqueia quando é executado sem relatório válido e aprovado.
+  Não foi encontrado mecanismo determinístico integrado ao harness para
+  impedir uma resposta de conclusão se a etapa for omitida; essa limitação
+  deve permanecer explícita e não pode ser descrita como enforcement
+  automático.
 - Não pode editar arquivos, executar comandos, publicar, migrar nem escrever
   no banco ou Storage de produção.
 - O relatório estável inclui critérios, resultados, evidências e totais para

@@ -16,8 +16,11 @@ aprovação separada do DDL. Não alterar `styles.css`.
 - Verificação: revisão contra HTML/ADR/rules; execução real e independente
   do `spec-verifier`; persistir sem alteração o relatório JSON e executar
   `python tools/spec_verification_gate.py`.
-- Estado: documentação revisada; bloqueada até verificação real e gate
-  aprovado. Não iniciar implementação nem declarar spec aprovada antes disso.
+- Estado: baseline independente executado; o gate pré-implementação valida
+  formato, critérios e evidências, mas pode retornar código 1 pelos FAILs
+  esperados. Essa rodada não aprova a implementação; o gate final deve
+  retornar código 0 em T-08. A spec/plano e o DDL foram aprovados pelo
+  usuário, portanto as tasks de implementação podem prosseguir.
 
 ## T-02 — Aprovar proposta de DDL
 
@@ -28,7 +31,8 @@ aprovação separada do DDL. Não alterar `styles.css`.
   conforme `rules/migration.md`.
 - Critérios: CA-31–CA-35.
 - Verificação: aprovação explícita do DDL e revisão do impacto em dados.
-- Estado: pendente. Dependência: T-01.
+- Estado: concluída; DDL aprovado explicitamente pelo usuário. Dependência:
+  T-01.
 
 ## T-03 — Criar enforcement local no PostgreSQL
 

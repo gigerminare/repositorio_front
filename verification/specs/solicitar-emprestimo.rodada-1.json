@@ -1,0 +1,238 @@
+{
+  "format_version": 1,
+  "spec_path": "repositorio_front/docs/specs/solicitar-emprestimo.md",
+  "criteria": [
+    {
+      "id": "CA-27",
+      "criterion": "Acesso ao catálogo, solicitação e “Meus empréstimos” exige autenticação de colaborador no tenant ativo; user/tenant vêm do contexto validado no backend.",
+      "result": "FAIL",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "repositorio_front/README.md",
+          "lines": [5, 10],
+          "observation": "O frontend é descrito como uma página estática que não autentica usuários, não chama a API, e não tem React/Vite configurados."
+        },
+        {
+          "kind": "missing",
+          "path": "repositorio-back/src/modules/auth/",
+          "lines": null,
+          "observation": "Escopo pesquisado: diretório backend src/modules; foi encontrado apenas initial-data, sem módulo de autenticação/contexto."
+        }
+      ]
+    },
+    {
+      "id": "CA-28",
+      "criterion": "O catálogo lista os 12 equipamentos com imagem, nome, categoria e situação efetiva; apenas disponíveis podem ser solicitados.",
+      "result": "FAIL",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "repositorio_front/README.md",
+          "lines": [5, 7],
+          "observation": "O README informa que a página não carrega dados de empréstimos nem chama a API."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio_front/index.html",
+          "lines": [55, 87],
+          "observation": "O conteúdo implementado nessa seção é o formulário de login e seu script; não há catálogo, cards de equipamentos ou ação de solicitação."
+        }
+      ]
+    },
+    {
+      "id": "CA-29",
+      "criterion": "Cada imagem tem link `Fotos: Pexels` associado, sem rodapé.",
+      "result": "FAIL",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "repositorio_front/index.html",
+          "lines": [55, 87],
+          "observation": "A interface contém a seção de login e não apresenta imagens de equipamento nem link `Fotos: Pexels`."
+        }
+      ]
+    },
+    {
+      "id": "CA-30",
+      "criterion": "Solicitar equipamento disponível cria empréstimo imediatamente; item em manutenção ou com empréstimo aberto é recusado.",
+      "result": "FAIL",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "repositorio-back/src/app.controller.ts",
+          "lines": [4, 10],
+          "observation": "O controller expõe somente a rota GET de diagnóstico `getHello`; não há endpoint de solicitação."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio_front/script.js",
+          "lines": [45, 52],
+          "observation": "O envio do formulário apenas simula validação e informa que a autenticação será conectada ao backend; não cria empréstimo nem comunica recusas de negócio."
+        }
+      ]
+    },
+    {
+      "id": "CA-31",
+      "criterion": "O vencimento segue 14 dias úteis, contando do próximo dia útil, excluindo somente feriados nacionais oficiais brasileiros, por calendário local determinístico versionado anualmente com autoridade, identificação e URL oficial da fonte, datas de publicação/verificação, versão e SHA-256 registrados; não há consulta externa em runtime. Pontos facultativos e feriados estaduais/municipais não são excluídos; ano sem calendário versionado falha explicitamente. O limite exclusivo `due_at` é 00h do dia seguinte ao vencimento em `America/Sao_Paulo`; o empréstimo passa a atrasado quando `reference_instant >= due_at`.",
+      "result": "FAIL",
+      "evidence": [
+        {
+          "kind": "missing",
+          "path": "repositorio-back/src/modules/loans/calendar/",
+          "lines": null,
+          "observation": "Escopo pesquisado: diretório backend src/modules; foi encontrado apenas initial-data, sem material de calendário de feriados ou cálculo de vencimento."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio-back/prisma/migrations/20261111043720_initial_data/migration.sql",
+          "lines": [114, 121],
+          "observation": "A migration inicial define apenas a restrição de que due_at seja posterior a borrowed_at e o índice parcial; não contém calendário versionado nem função de cálculo do vencimento."
+        }
+      ]
+    },
+    {
+      "id": "CA-32",
+      "criterion": "O quinto empréstimo aberto é permitido e o sexto é recusado. Com quatro empréstimos abertos não atrasados e dois equipamentos disponíveis diferentes, duas solicitações simultâneas do mesmo colaborador resultam exatamente em uma criação e uma recusa; a decisão é serializada no PostgreSQL e reavaliada após a espera pelo lock do colaborador.",
+      "result": "FAIL",
+      "evidence": [
+        {
+          "kind": "missing",
+          "path": "repositorio-back/src/modules/loans/",
+          "lines": null,
+          "observation": "Escopo pesquisado: diretório backend src/modules; foi encontrado apenas initial-data, sem implementação do domínio de empréstimos."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio-back/test/app.e2e-spec.ts",
+          "lines": [6, 28],
+          "observation": "O teste de ponta a ponta cobre somente GET /v1 e a resposta Hello World; não cobre limite ou concorrência de empréstimos."
+        }
+      ]
+    },
+    {
+      "id": "CA-33",
+      "criterion": "Qualquer empréstimo aberto atrasado bloqueia novo pedido. O empréstimo permanece no prazo durante todo o dia da data prevista e passa a atrasado precisamente às 00h do dia seguinte em `America/Sao_Paulo`, conforme comparação `reference_instant >= due_at`.",
+      "result": "FAIL",
+      "evidence": [
+        {
+          "kind": "missing",
+          "path": "repositorio-back/src/modules/loans/",
+          "lines": null,
+          "observation": "Escopo pesquisado: diretório backend src/modules; foi encontrado apenas initial-data, sem regra de atraso ou bloqueio de solicitação."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio-back/test/app.e2e-spec.ts",
+          "lines": [6, 28],
+          "observation": "O único teste de ponta a ponta observado verifica a rota de diagnóstico; não há cenário de vencimento ou bloqueio por atraso."
+        }
+      ]
+    },
+    {
+      "id": "CA-34",
+      "criterion": "Serviço e PostgreSQL impedem equipamento em manutenção/emprestado, pedido acima do limite e solicitação por pessoa com atraso. Locks de tenant/colaborador e equipamento são adquiridos em ordem fixa antes do comando separado de criação. Sob `READ COMMITTED`, a função de criação começa com snapshot posterior às esperas, captura uma única referência canônica e a usa para regra, cálculo e gravação; a trigger valida a integridade e o índice parcial protege a unicidade por equipamento. O backend consome os timestamps retornados sem criar outro instante.",
+      "result": "FAIL",
+      "evidence": [
+        {
+          "kind": "missing",
+          "path": "repositorio-back/src/modules/loans/",
+          "lines": null,
+          "observation": "Escopo pesquisado: diretório backend src/modules; foi encontrado apenas initial-data, sem serviço de empréstimos ou mecanismo de locks."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio-back/prisma/migrations/20261111043720_initial_data/migration.sql",
+          "lines": [119, 121],
+          "observation": "A migration contém o índice parcial de empréstimos abertos por equipamento, mas não evidencia função de criação, trigger de integridade, locks ou captura de relógio canônico."
+        }
+      ]
+    },
+    {
+      "id": "CA-35",
+      "criterion": "Dois pedidos simultâneos para o mesmo equipamento produzem no máximo um empréstimo aberto, inclusive quando são feitos por colaboradores diferentes; o perdedor recebe recusa de negócio. Este teste é independente do cenário de concorrência por limite do CA-32.",
+      "result": "FAIL",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "repositorio-back/prisma/migrations/20261111043720_initial_data/migration.sql",
+          "lines": [119, 121],
+          "observation": "Há um índice único parcial para empréstimos abertos por equipamento, mas a migration não implementa a resposta de recusa de negócio ao perdedor."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio-back/test/app.e2e-spec.ts",
+          "lines": [6, 28],
+          "observation": "O teste de ponta a ponta cobre somente a rota de diagnóstico e não contém a corrida independente entre colaboradores."
+        }
+      ]
+    },
+    {
+      "id": "CA-36",
+      "criterion": "“Meus empréstimos” mostra somente os empréstimos abertos do usuário autenticado, com equipamento e data de devolução.",
+      "result": "FAIL",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "repositorio_front/README.md",
+          "lines": [5, 7],
+          "observation": "O README informa que o frontend não autentica usuários nem carrega dados de empréstimos."
+        },
+        {
+          "kind": "missing",
+          "path": "repositorio-back/src/modules/loans/",
+          "lines": null,
+          "observation": "Escopo pesquisado: diretório backend src/modules; foi encontrado apenas initial-data, sem consulta de empréstimos próprios."
+        }
+      ]
+    },
+    {
+      "id": "CA-37",
+      "criterion": "Recusas por atraso, limite, manutenção ou empréstimo existente comunicam o motivo ao usuário, e a regra não depende do frontend.",
+      "result": "FAIL",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "repositorio_front/script.js",
+          "lines": [48, 52],
+          "observation": "O formulário apresenta somente a mensagem de que a autenticação será conectada ao backend; não comunica motivos de recusa de empréstimo."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio-back/src/app.controller.ts",
+          "lines": [4, 10],
+          "observation": "O controller observado expõe somente a rota GET de diagnóstico, sem regras de empréstimo no backend."
+        }
+      ]
+    },
+    {
+      "id": "CA-38",
+      "criterion": "Testes cobrem calendário/vencimento, regras de domínio, persistência/trigger, isolamento por tenant, concorrência, contrato HTTP e comportamento do frontend usando dados locais. O frontend adota React/Vite conforme ADR-001, preservando a identidade visual e os estilos existentes dentro do escopo descrito nesta spec.",
+      "result": "FAIL",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "repositorio_front/README.md",
+          "lines": [5, 10],
+          "observation": "O README caracteriza o frontend como página estática e informa que React e Vite ainda não estão configurados."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio_front/README.md",
+          "lines": [33, 34],
+          "observation": "O README informa que não há scripts de teste ou build frontend."
+        },
+        {
+          "kind": "file",
+          "path": "repositorio-back/test/app.e2e-spec.ts",
+          "lines": [6, 28],
+          "observation": "O teste de ponta a ponta observado cobre somente GET /v1 com resposta Hello World, não a matriz de testes descrita no critério."
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "pass": 0,
+    "fail": 12
+  }
+}

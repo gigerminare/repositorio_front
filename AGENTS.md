@@ -16,6 +16,10 @@ Antes de declarar qualquer spec concluída:
    ausência de relatório, critério faltante ou evidência inválida mantém a
    spec bloqueada e as falhas devem ser devolvidas ao agente principal.
 
+Essa é uma obrigação do processo, não um bloqueio técnico da conversa: o gate
+somente valida quando invocado. Não afirme que o harness impede
+deterministicamente uma conclusão se a etapa for omitida.
+
 O verificador não pode editar código, testes ou documentação nem corrigir
 falhas de teste. A correção e a nova rodada são responsabilidade do agente
 principal. O agente verificador não tem ferramenta de execução ou acesso a
