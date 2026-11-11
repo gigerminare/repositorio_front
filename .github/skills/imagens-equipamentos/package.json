@@ -1,0 +1,17 @@
+{
+  "name": "imagens-equipamentos",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test tests"
+  },
+  "dependencies": {
+    "sharp": "^0.34.5"
+  },
+  "allowScripts": {
+    "sharp@0.34.5": true
+  }
+}
