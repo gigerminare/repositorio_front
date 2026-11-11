@@ -1,1 +1,6 @@
 .env
+.env.*
+!.env.example
+
+.github/skills/imagens-equipamentos/node_modules/
+__pycache__/
