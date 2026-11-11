@@ -3,6 +3,10 @@
 - Status: Accepted
 - Date: 2026-10-01
 
+> Os valores de negócio ilustrados neste documento refletem o PRD geral.
+> Para a prática oficial, os valores e comportamentos da spec
+> `docs/specs/pratica-sdd-subagentes.md` prevalecem no escopo da atividade.
+
 ## Contexto
 
 O front-end do EMPREST.AI precisa seguir uma identidade visual consistente, densa e moderna, em modo escuro, com foco em clareza operacional e boa legibilidade para um sistema interno de empréstimo de equipamentos de TI. O objetivo desta ADR é documentar a decisão de design system e o conjunto de regras visuais que devem ser reproduzidas em todas as telas, sem perder a consistência entre páginas, componentes, interações e estados.
@@ -15,15 +19,6 @@ O layout foi definido a partir de um base visual inspirada no "Nocturne", com o 
 
 #### Tokens de base (ground escuro)
 
-<<<<<<< HEAD
-| Token | Valor | Uso |
-| --- | --- | --- |
-| `--color-bg` | `#161826` | fundo de toda página |
-| `--color-surface` | `#232532` | cards, tabela, modal, inputs |
-| `--color-text` | `#e9e9ed` | texto principal |
-| `--color-divider` | `color-mix(in srgb, #e9e9ed 16%, transparent)` | bordas e réguas |
-| `--color-neutral-900` | `#292b31` | avatares neutros na tabela |
-=======
 | Token                 | Valor                                          | Uso                          |
 | --------------------- | ---------------------------------------------- | ---------------------------- |
 | `--color-bg`          | `#161826`                                      | fundo de toda página         |
@@ -31,7 +26,6 @@ O layout foi definido a partir de um base visual inspirada no "Nocturne", com o 
 | `--color-text`        | `#e9e9ed`                                      | texto principal              |
 | `--color-divider`     | `color-mix(in srgb, #e9e9ed 16%, transparent)` | bordas e réguas              |
 | `--color-neutral-900` | `#292b31`                                      | avatares neutros na tabela   |
->>>>>>> 3406249f2b01d6a09e1f8e5562cf547abe73c7e8
 
 #### Acento da marca (substitui o acento do Nocturne)
 
@@ -47,21 +41,12 @@ Tints por transparência usados no layout: `rgba(47,184,172,0.10)` (chip de filt
 
 #### Cores semânticas de situação (pills, bordas, prazos)
 
-<<<<<<< HEAD
-| Estado | Texto (`fg`) | Fundo (`bg`) | Borda (`bd`) |
-| --- | --- | --- | --- |
-| Disponível / Em dia | `#5fcfc4` | `rgba(47,184,172,0.12)` | `rgba(47,184,172,0.40)` |
-| Emprestado / a vencer | `#c9a25f` | `rgba(201,162,95,0.12)` | `rgba(201,162,95,0.38)` |
-| Em atraso / erro | `#e88b8b` | `rgba(200,90,90,0.14)` | `rgba(200,90,90,0.40)` |
-| Em manutenção / inativo | `#9aa0ad` | `rgba(154,160,173,0.10)` | `rgba(154,160,173,0.30)` |
-=======
 | Estado                  | Texto (`fg`) | Fundo (`bg`)             | Borda (`bd`)             |
 | ----------------------- | ------------ | ------------------------ | ------------------------ |
 | Disponível / Em dia     | `#5fcfc4`    | `rgba(47,184,172,0.12)`  | `rgba(47,184,172,0.40)`  |
 | Emprestado / a vencer   | `#c9a25f`    | `rgba(201,162,95,0.12)`  | `rgba(201,162,95,0.38)`  |
 | Em atraso / erro        | `#e88b8b`    | `rgba(200,90,90,0.14)`   | `rgba(200,90,90,0.40)`   |
 | Em manutenção / inativo | `#9aa0ad`    | `rgba(154,160,173,0.10)` | `rgba(154,160,173,0.30)` |
->>>>>>> 3406249f2b01d6a09e1f8e5562cf547abe73c7e8
 
 Banner de bloqueio por atraso: borda `#7a3b3b`, fundo `rgba(122,59,59,0.14)`, texto `#e88b8b`.
 
@@ -91,23 +76,6 @@ Sempre por transparência sobre `--color-text`, nunca um cinza novo:
 
 #### Escala usada
 
-<<<<<<< HEAD
-| Elemento | Tamanho |
-| --- | --- |
-| H1 do login | 44px |
-| H1 de tela interna | 30px |
-| Número de KPI | 30px |
-| H2 "Entrar" | 26px |
-| Título de modal | 20px |
-| Título de painel/seção | 17px |
-| Título de card | 16.5px |
-| Nome de item em lista | 16px |
-| Subtítulo de página / lead do login | 14–16px |
-| Corpo, célula de tabela, input, botão | 13.5–14px |
-| Nota, metadado, chip | 12–13px |
-| Kicker / cabeçalho de tabela | 11–11.5px, `letter-spacing: 0.08–0.09em`, `text-transform: uppercase` |
-| Micro-rótulo (patrimônio, dica) | 11–12px |
-=======
 | Elemento                              | Tamanho                                                               |
 | ------------------------------------- | --------------------------------------------------------------------- |
 | H1 do login                           | 44px                                                                  |
@@ -123,7 +91,6 @@ Sempre por transparência sobre `--color-text`, nunca um cinza novo:
 | Nota, metadado, chip                  | 12–13px                                                               |
 | Kicker / cabeçalho de tabela          | 11–11.5px, `letter-spacing: 0.08–0.09em`, `text-transform: uppercase` |
 | Micro-rótulo (patrimônio, dica)       | 11–12px                                                               |
->>>>>>> 3406249f2b01d6a09e1f8e5562cf547abe73c7e8
 
 Marca: `EMPREST` peso 700 + `.AI` no acento, `letter-spacing: 0.02em` — 17px na tela de login, 15px na barra de navegação.
 

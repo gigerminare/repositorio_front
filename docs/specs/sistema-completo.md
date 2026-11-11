@@ -1,7 +1,12 @@
 # Spec: sistema completo EMPREST.AI
 
 - Escopo: frontend e backend
-- Status: aprovado para implementação pelo pedido do usuário
+- Status: especificação anterior da demonstração local; a prática oficial é regida por `pratica-sdd-subagentes.md`.
+
+> Os requisitos locais e em memória abaixo descrevem a demonstração anterior.
+> Para a atividade, a spec vinculada acima define a entrega em produção e
+> prevalece apenas sobre os requisitos conflitantes dentro do escopo da
+> prática.
 
 ## Contexto e problema
 

@@ -1,5 +1,10 @@
 # Spec: schema inicial do banco
 
+> Para as regras de empréstimo da prática oficial, consulte
+> `pratica-sdd-subagentes.md`. O limite de cinco itens e o prazo de 14 dias
+> úteis dessa atividade prevalecem sobre as regras gerais do PRD; esta nota
+> não altera o PRD nem decide as convenções de calendário ainda abertas.
+
 - Escopo: backend
 - Status: aprovado para implementação pelo pedido do usuário
 
@@ -37,5 +42,5 @@ auditoria.
 ## Dependências e riscos
 
 O banco precisa ser PostgreSQL com as funções `auth.uid()` e `auth.jwt()` do
-Supabase disponíveis. As regras de máximo de três empréstimos e bloqueio por
-atraso dependem da transação da camada de aplicação.
+Supabase disponíveis. Para a prática, o limite de cinco empréstimos e o
+bloqueio por atraso dependem da transação da camada de aplicação.

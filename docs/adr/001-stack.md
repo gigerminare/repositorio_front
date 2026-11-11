@@ -56,6 +56,7 @@
 - **Controller → Service → Repository** — substitui "MVC" da lista original: não existe View no servidor, o front é uma SPA separada. O Repository isola o Prisma para o service não depender de ORM.
 - **Zod via `nestjs-zod`, sem `class-validator`** — é o que gera o OpenAPI a partir do mesmo schema que valida a entrada; com dois validadores, o documento gerado e a validação real divergem.
 - **`AsyncLocalStorage` com o tenant** — passar `tenant_id` como parâmetro em toda assinatura de método é o tipo de coisa que alguém esquece uma vez e vira vazamento entre tenants.
+- **`sharp` para a prática de imagens** — dependência aprovada para redimensionar localmente as fotos obtidas pela skill para 800×600 antes de prepará-las para o Storage. Esta aprovação é específica para a exigência da atividade e não autoriza outras bibliotecas.
 
 ## 4. Contrato de API
 
